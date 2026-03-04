@@ -1,0 +1,1283 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DeepSeek mHC (By ICE257_ on X): Breaking the Laws of AI Physics</title>
+    <link rel="icon" type="image/x-icon" href="assets/favicon.ico">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+
+    <!-- Stripe-inspired Light Editorial Theme -->
+
+    <style>
+        /* Light Theme (default) */
+        :root {
+            --bg-primary: #FAFAF8;
+            --bg-secondary: #FFFFFF;
+            --bg-tertiary: #F5F5F4;
+            --bg-accent: #F0FDFA;
+            --text-primary: #1C1917;
+            --text-secondary: #44403C;
+            --text-muted: #78716C;
+            --border-primary: #E7E5E4;
+            --border-secondary: #D6D3D1;
+            --accent-teal: #0D9488;
+            --accent-teal-hover: #0F766E;
+            --accent-red: #DC2626;
+            --accent-red-muted: #FEE2E2;
+            --card-bg: #FFFFFF;
+            --nav-bg: rgba(250, 250, 248, 0.95);
+            --canvas-bg: #FAFAF8;
+            --button-primary-bg: #1C1917;
+            --button-primary-text: #FFFFFF;
+            --button-secondary-bg: transparent;
+            --button-secondary-border: #D6D3D1;
+            --button-secondary-text: #44403C;
+            --selection-bg: #0D9488;
+            --selection-text: #FFFFFF;
+        }
+
+        /* Dark Theme */
+        [data-theme="dark"] {
+            --bg-primary: #0C0A09;
+            --bg-secondary: #1C1917;
+            --bg-tertiary: #292524;
+            --bg-accent: #134E4A;
+            --text-primary: #FAFAF9;
+            --text-secondary: #D6D3D1;
+            --text-muted: #A8A29E;
+            --border-primary: #292524;
+            --border-secondary: #44403C;
+            --accent-teal: #2DD4BF;
+            --accent-teal-hover: #5EEAD4;
+            --accent-red: #F87171;
+            --accent-red-muted: #450A0A;
+            --card-bg: #1C1917;
+            --nav-bg: rgba(12, 10, 9, 0.95);
+            --canvas-bg: #1C1917;
+            --button-primary-bg: #FAFAF9;
+            --button-primary-text: #1C1917;
+            --button-secondary-bg: transparent;
+            --button-secondary-border: #44403C;
+            --button-secondary-text: #D6D3D1;
+            --selection-bg: #2DD4BF;
+            --selection-text: #0C0A09;
+        }
+
+        * {
+            transition: background-color 0.3s ease, border-color 0.3s ease, color 0.15s ease;
+        }
+
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+        }
+
+        ::selection {
+            background-color: var(--selection-bg);
+            color: var(--selection-text);
+        }
+
+        .font-serif {
+            font-family: 'Playfair Display', Georgia, serif;
+        }
+
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 400px;
+        }
+
+        .canvas-viz {
+            width: 100%;
+            height: 300px;
+            background-color: var(--canvas-bg);
+            border-radius: 2rem;
+            border: 1px solid var(--border-primary);
+        }
+
+        .matrix-cell {
+            transition: all 0.5s ease;
+        }
+
+        .section-divider {
+            height: 1px;
+            background: linear-gradient(to right, transparent, var(--border-primary), transparent);
+        }
+
+        /* Theme toggle button */
+        .theme-toggle {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid var(--border-secondary);
+            background: var(--bg-secondary);
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .theme-toggle:hover {
+            color: var(--text-primary);
+            border-color: var(--text-muted);
+        }
+
+        /* Theme-aware utility classes */
+        .bg-theme-primary {
+            background-color: var(--bg-primary);
+        }
+
+        .bg-theme-secondary {
+            background-color: var(--bg-secondary);
+        }
+
+        .bg-theme-tertiary {
+            background-color: var(--bg-tertiary);
+        }
+
+        .bg-theme-card {
+            background-color: var(--card-bg);
+        }
+
+        .text-theme-primary {
+            color: var(--text-primary);
+        }
+
+        .text-theme-secondary {
+            color: var(--text-secondary);
+        }
+
+        .text-theme-muted {
+            color: var(--text-muted);
+        }
+
+        .border-theme-primary {
+            border-color: var(--border-primary);
+        }
+
+        .border-theme-secondary {
+            border-color: var(--border-secondary);
+        }
+
+        .accent-teal {
+            color: var(--accent-teal);
+        }
+
+        .accent-red {
+            color: var(--accent-red);
+        }
+
+        /* Dark mode overrides for Tailwind stone-* classes */
+        [data-theme="dark"] .text-stone-900 {
+            color: #FAFAF9;
+        }
+
+        [data-theme="dark"] .text-stone-800 {
+            color: #E7E5E4;
+        }
+
+        [data-theme="dark"] .text-stone-700 {
+            color: #D6D3D1;
+        }
+
+        [data-theme="dark"] .text-stone-600 {
+            color: #A8A29E;
+        }
+
+        [data-theme="dark"] .text-stone-500 {
+            color: #78716C;
+        }
+
+        [data-theme="dark"] .bg-stone-900 {
+            background-color: #FAFAF9;
+            color: #1C1917;
+        }
+
+        [data-theme="dark"] .bg-stone-100 {
+            background-color: #292524;
+        }
+
+        [data-theme="dark"] .bg-stone-50 {
+            background-color: #1C1917;
+        }
+
+        [data-theme="dark"] .border-stone-200 {
+            border-color: #44403C;
+        }
+
+        [data-theme="dark"] .border-stone-300 {
+            border-color: #57534E;
+        }
+
+        [data-theme="dark"] .bg-white {
+            background-color: #1C1917;
+        }
+
+        [data-theme="dark"] .text-white {
+            color: #1C1917;
+        }
+
+        [data-theme="dark"] .hover\:bg-stone-100:hover {
+            background-color: #292524;
+        }
+
+        [data-theme="dark"] .text-teal-700 {
+            color: #2DD4BF;
+        }
+
+        [data-theme="dark"] .text-teal-600 {
+            color: #5EEAD4;
+        }
+
+        [data-theme="dark"] .bg-teal-700 {
+            background-color: #0F766E;
+        }
+
+        [data-theme="dark"] .bg-teal-600 {
+            background-color: #14B8A6;
+        }
+
+        [data-theme="dark"] .text-red-700 {
+            color: #FCA5A5;
+        }
+
+        [data-theme="dark"] .text-red-600 {
+            color: #F87171;
+        }
+
+        [data-theme="dark"] .bg-red-100 {
+            background-color: #450A0A;
+        }
+
+        [data-theme="dark"] .text-red-800 {
+            color: #FCA5A5;
+        }
+
+        [data-theme="dark"] .border-teal-600 {
+            border-color: #2DD4BF;
+        }
+
+        [data-theme="dark"] .text-amber-600 {
+            color: #FCD34D;
+        }
+    </style>
+</head>
+
+<body class="bg-theme-primary">
+
+    <!-- Navigation -->
+    <nav class="sticky top-0 z-50 backdrop-blur border-b"
+        style="background-color: var(--nav-bg); border-color: var(--border-primary);">
+        <div class="max-w-5xl mx-auto px-4 py-4 flex justify-between items-center">
+            <div class="flex items-center gap-3">
+                <div class="font-serif text-xl font-semibold text-theme-primary">ICE<span
+                        style="color: var(--accent-teal);">257_</span>
+                </div>
+            </div>
+            <div class="hidden md:flex space-x-8 text-sm font-medium text-theme-muted">
+                <a href="#bottleneck" class="hover:text-theme-primary transition">The Bottleneck</a>
+                <a href="#explosion" class="hover:text-theme-primary transition">The Instability</a>
+                <a href="#solution" class="hover:text-theme-primary transition">The Fix</a>
+                <a href="#results" class="hover:text-theme-primary transition">Results</a>
+            </div>
+            <div class="flex items-center gap-4">
+                <a href="https://x.com/ICE257_/status/2009656972489159025" target="_blank" rel="noopener"
+                    class="text-sm font-medium text-theme-muted hover:text-theme-primary transition hidden sm:flex items-center gap-2">
+                    <i class="fab fa-x-twitter"></i> Full Article
+                </a>
+                <button id="theme-toggle" class="theme-toggle" aria-label="Toggle dark mode">
+                    <i class="fas fa-moon" id="theme-icon"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="max-w-4xl mx-auto px-4 py-20 md:py-28">
+        <p class="text-xs font-medium uppercase tracking-widest text-theme-muted mb-6">/ Breaking Architecture Analysis
+        </p>
+        <h1 class="font-serif text-5xl md:text-7xl font-semibold text-theme-primary mb-8 leading-[1.1]">
+            DeepSeek Just Broke the<br />
+            <span class="italic">Laws of AI Physics</span>
+        </h1>
+        <p class="text-lg md:text-xl text-theme-secondary mb-10 max-w-2xl leading-relaxed">
+            The "ResNet Bottleneck" has limited AI scaling for a decade. Paper <span
+                class="font-mono text-theme-primary bg-theme-tertiary px-1.5 py-0.5 text-sm"><a
+                    href="https://www.arxiv.org/pdf/2512.24880" target="_blank"
+                    rel="noopener">arXiv:2512.24880</a></span>
+            introduces
+            Manifold Constrained Hyperconnections. The single-lane highway is dead.
+        </p>
+        <div class="flex flex-col sm:flex-row gap-4">
+            <a href="https://x.com/ICE257_/status/2009656972489159025"
+                style="background-color: var(--button-primary-bg); color: var(--button-primary-text);"
+                class="inline-flex items-center justify-center px-6 py-3 font-medium transition hover:opacity-90">Read
+                Full Article On X</a>
+            <a href="https://www.arxiv.org/pdf/2512.24880" target="_blank" rel="noopener"
+                style="border: 1px solid var(--border-secondary); color: var(--text-secondary);"
+                class="inline-flex items-center justify-center gap-2 px-6 py-3 font-medium transition hover:opacity-80">
+                <i class="fab"></i> Read DeepSeek Research Paper
+            </a>
+        </div>
+    </header>
+
+    <div class="section-divider max-w-5xl mx-auto mb-16"></div>
+
+    <!-- Main Content Container -->
+    <main class="max-w-5xl mx-auto px-4 space-y-24 pb-20">
+
+        <!-- Section 1: The ResNet Bottleneck -->
+        <section id="bottleneck" class="grid md:grid-cols-2 gap-12 items-center">
+            <div>
+                <p class="text-xs font-medium uppercase tracking-widest text-stone-500 mb-3">/ 01</p>
+                <h2 class="font-serif text-3xl md:text-4xl font-semibold text-stone-900 mb-4">The Decade-Long Bottleneck
+                </h2>
+                <p class="text-stone-600 mb-4 leading-relaxed">
+                    Since 2015, every major model (GPT, Gemini, Llama) has relied on <strong
+                        class="text-stone-800">Residual Connections (ResNet)</strong>. Think of it as a "spine" that
+                    lets signals bypass complex layers.
+                </p>
+                <p class="text-stone-600 mb-6 leading-relaxed">
+                    <strong class="text-stone-800">The Flaw:</strong> It functions like a single fiber optic cable. To
+                    make models smarter, we made them "taller" (more layers). But trying to make them "wider" caused the
+                    signal to degrade.
+                </p>
+                <div class="bg-stone-100 p-4 border border-stone-200">
+                    <h4 class="text-xs font-medium text-stone-500 uppercase mb-2">Technical Insight</h4>
+                    <p class="text-sm text-stone-600">
+                        In standard Transformers, width expansion leads to feature collapse. The network converges to a
+                        single dominant path, wasting the extra capacity.
+                    </p>
+                </div>
+            </div>
+            <div class="flex flex-col">
+                <div class="mb-2 flex justify-between items-center">
+                    <span class="text-xs font-mono text-teal-700">LIVE SIMULATION: ResNet Traffic</span>
+                    <span class="text-xs text-stone-500">Signal Flow</span>
+                </div>
+                <div class="chart-container border border-stone-200 overflow-hidden">
+                    <canvas id="bottleneckCanvas" class="canvas-viz"></canvas>
+                </div>
+                <p class="text-center text-xs text-stone-500 mt-2">Packets queuing through a single residual pathway.
+                </p>
+            </div>
+        </section>
+
+        <!-- Section 2: The Hyper-Connection Explosion -->
+        <section id="explosion" class="grid md:grid-cols-2 gap-12 items-center">
+            <div class="order-2 md:order-1">
+                <div class="mb-2 flex justify-between items-center">
+                    <span class="text-xs font-mono text-red-700">SIMULATION: Unconstrained Width</span>
+                    <span class="text-xs text-stone-500">Signal Stability: CRITICAL</span>
+                </div>
+                <div class="chart-container border border-stone-200 overflow-hidden">
+                    <canvas id="explosionCanvas" class="canvas-viz"></canvas>
+                </div>
+                <p class="text-center text-xs text-stone-500 mt-2">Without control, signals amplify (3000x) and turn
+                    into noise.</p>
+            </div>
+            <div class="order-1 md:order-2">
+                <p class="text-xs font-medium uppercase tracking-widest text-stone-500 mb-3">/ 02</p>
+                <h2 class="font-serif text-3xl md:text-4xl font-semibold text-stone-900 mb-4">Why We Couldn't Just "Add
+                    Lanes"</h2>
+                <p class="text-stone-600 mb-4 leading-relaxed">
+                    Researchers tried "Hyper-Connections" which essentially means connecting every layer to every other
+                    layer. Logically, this
+                    should make the AI smarter.
+                </p>
+                <p class="text-stone-600 mb-6 leading-relaxed">
+                    <strong class="text-stone-800">The Crash:</strong> The math broke. Signals amplified exponentially.
+                    DeepSeek's paper notes that unconstrained signals amplify by <strong
+                        class="text-stone-800">3000x</strong>, causing the model to output pure noise.
+                </p>
+                <ul class="space-y-2 text-sm text-stone-600">
+                    <li class="flex items-center"><i class="fas fa-times text-red-600 w-5"></i> Gradient Explosion</li>
+                    <li class="flex items-center"><i class="fas fa-times text-red-600 w-5"></i> Numerical Instability
+                    </li>
+                    <li class="flex items-center"><i class="fas fa-times text-red-600 w-5"></i> Training Collapse</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- Section 3: The Sinkhorn-Knopp Solution -->
+        <section id="solution" class="bg-white p-8 border border-stone-200">
+            <div class="mb-10">
+                <p class="text-xs font-medium uppercase tracking-widest text-stone-500 mb-3">/ 03</p>
+                <h2 class="font-serif text-3xl md:text-4xl font-semibold text-stone-900 mb-4">The 1967 Algorithm: The
+                    "Traffic Cop"</h2>
+                <p class="text-stone-600 max-w-2xl leading-relaxed">
+                    DeepSeek resurrected the <strong class="text-stone-800">Sinkhorn-Knopp Algorithm</strong>. It
+                    creates a "Doubly Stochastic Matrix", mathematically forcing every row and column to sum to 1.
+                </p>
+            </div>
+
+            <!-- Grid: Simulation left, Matrix right -->
+            <div class="grid md:grid-cols-2 gap-8">
+                <!-- Particle Simulation -->
+                <div>
+                    <div class="mb-2 flex justify-between items-center">
+                        <span class="text-xs font-mono text-teal-700">LIVE SIMULATION: Sinkhorn Stabilization</span>
+                        <span class="text-xs text-stone-500" id="sinkhorn-sim-status">Status: Chaotic</span>
+                    </div>
+                    <div class="chart-container border border-stone-200 overflow-hidden" style="height: 280px;">
+                        <canvas id="sinkhornSimCanvas" class="canvas-viz"></canvas>
+                    </div>
+                    <p class="text-center text-xs text-stone-500 mt-2">Watch the algorithm tame chaotic signals into
+                        balanced lanes.</p>
+                </div>
+
+                <!-- Interactive Matrix (more prominent) -->
+                <div class="bg-stone-50 p-6 border border-stone-200">
+                    <h3 class="font-serif text-xl font-semibold text-stone-900 mb-3">Interactive Matrix Balancer</h3>
+                    <p class="text-sm text-stone-600 mb-4">
+                        Click "Destabilize" to simulate noisy signals. Then click "Apply Sinkhorn" to watch the
+                        algorithm force balance.
+                    </p>
+
+                    <!-- The Grid Viz (larger) -->
+                    <div id="sinkhorn-grid" class="grid grid-cols-3 gap-2 mb-4">
+                        <!-- Cells generated by JS -->
+                    </div>
+                    <div class="grid grid-cols-3 gap-2 mb-4">
+                        <div class="text-center text-xs text-teal-700 font-mono" id="col-sum-0">Col 1</div>
+                        <div class="text-center text-xs text-teal-700 font-mono" id="col-sum-1">Col 2</div>
+                        <div class="text-center text-xs text-teal-700 font-mono" id="col-sum-2">Col 3</div>
+                    </div>
+
+                    <div class="flex gap-3 mb-3">
+                        <button onclick="randomizeMatrix()"
+                            class="bg-stone-900 hover:bg-stone-800 text-white px-4 py-2 text-sm font-medium transition flex-1">
+                            Destabilize
+                        </button>
+                        <button onclick="runSinkhornStep()"
+                            class="bg-teal-700 hover:bg-teal-600 text-white px-4 py-2 text-sm font-medium transition flex-1">
+                            Apply Sinkhorn
+                        </button>
+                    </div>
+                    <div class="text-xs text-stone-500 font-mono">
+                        Iteration: <span id="iter-count" class="text-stone-800">0</span> | Max Deviation: <span
+                            id="max-dev" class="text-stone-800">0.00</span> | <span id="convergence-status"
+                            class="text-teal-700">Ready</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 4 Results -->
+        <section id="results">
+            <div class="mb-10">
+                <p class="text-xs font-medium uppercase tracking-widest text-stone-500 mb-3">/ 04</p>
+                <h2 class="font-serif text-3xl md:text-4xl font-semibold text-stone-900 mb-4">The Results</h2>
+                <p class="text-stone-600 max-w-2xl leading-relaxed">
+                    By applying Manifold Constraints, DeepSeek achieved "Wide" scaling with minimal overhead.
+                </p>
+            </div>
+
+            <!-- Static Metrics Grid -->
+            <div class="grid md:grid-cols-3 gap-6 mb-12">
+                <div class="bg-white p-6 border border-stone-200 text-center">
+                    <span class="block font-serif text-5xl font-semibold text-stone-900 mb-2">4x</span>
+                    <span class="text-sm text-stone-600">Width Expansion</span>
+                    <p class="text-xs text-stone-500 mt-2">Quadrupled information flow capacity</p>
+                </div>
+                <div class="bg-white p-6 border border-stone-200 text-center">
+                    <span class="block font-serif text-5xl font-semibold text-teal-700 mb-2">6.7%</span>
+                    <span class="text-sm text-stone-600">Training Overhead</span>
+                    <p class="text-xs text-stone-500 mt-2">Minimal extra cost for massive gains</p>
+                </div>
+                <div class="bg-white p-6 border border-stone-200 text-center">
+                    <span class="block font-serif text-5xl font-semibold text-stone-900 mb-2">1000+</span>
+                    <span class="text-sm text-stone-600">Layers Stable</span>
+                    <p class="text-xs text-stone-500 mt-2">Proven at extreme depths</p>
+                </div>
+            </div>
+
+            <!-- Comparison Bar -->
+            <div class="bg-white p-6 border border-stone-200">
+                <h3 class="text-sm font-medium text-stone-500 uppercase mb-6">Capacity vs Cost Trade-off</h3>
+                <div class="space-y-6">
+                    <div>
+                        <div class="flex justify-between text-sm mb-2">
+                            <span class="text-stone-600">Standard ResNet</span>
+                            <span class="text-stone-800 font-medium">100% capacity / 0% overhead</span>
+                        </div>
+                        <div class="h-4 bg-stone-100 overflow-hidden">
+                            <div class="h-full bg-stone-400" style="width: 25%"></div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="flex justify-between text-sm mb-2">
+                            <span class="text-stone-600">DeepSeek mHC</span>
+                            <span class="text-teal-700 font-medium">400% capacity / 6.7% overhead</span>
+                        </div>
+                        <div class="h-4 bg-stone-100 overflow-hidden">
+                            <div class="h-full bg-teal-600" style="width: 100%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div class="section-divider my-16"></div>
+
+        <!-- Why This Matters (Layman Benefits) -->
+        <section class="bg-white p-8 border border-stone-200">
+            <div class="mb-8">
+                <p class="text-xs font-medium uppercase tracking-widest text-stone-500 mb-3">/ Why It Matters</p>
+                <h2 class="font-serif text-3xl font-semibold text-stone-900 mb-4">What This Means For You</h2>
+                <p class="text-stone-600">Here's what this breakthrough means in plain English:</p>
+            </div>
+            <div class="grid md:grid-cols-3 gap-6">
+                <div class="border-l-2 border-teal-600 pl-6">
+                    <h3 class="font-semibold text-stone-900 mb-2">Cheaper AI</h3>
+                    <p class="text-sm text-stone-600">AI companies can now build smarter models without buying expensive
+                        new hardware. Training costs drop dramatically.</p>
+                </div>
+                <div class="border-l-2 border-teal-600 pl-6">
+                    <h3 class="font-semibold text-stone-900 mb-2">Faster Development</h3>
+                    <p class="text-sm text-stone-600">Models that used to take months to train can now be built faster.
+                        Expect more frequent AI updates and improvements.</p>
+                </div>
+                <div class="border-l-2 border-teal-600 pl-6">
+                    <h3 class="font-semibold text-stone-900 mb-2">AI on Your Phone</h3>
+                    <p class="text-sm text-stone-600">"Wide" models run better on regular devices. This could bring
+                        powerful AI to your phone, laptop, and smart home.</p>
+                </div>
+            </div>
+            <div class="mt-8 pt-6 border-t border-stone-200">
+                <p class="text-stone-600 text-sm"><strong class="text-stone-800">Bottom line:</strong> This isn't a
+                    research paper alone, it's also the blueprint for the next generation of AI that's smarter, cheaper,
+                    and more
+                    accessible.</p>
+            </div>
+        </section>
+
+        <!-- Full Article Text Section -->
+        <section id="article-text" class="max-w-3xl mx-auto mt-20 pt-10 border-t border-stone-200">
+            <h3 class="font-serif text-2xl font-semibold text-stone-900 mb-8">Full Report Summary</h3>
+
+            <article class="space-y-8">
+                <!-- Lead -->
+                <div class="bg-stone-100 p-6 border-l-4 border-teal-600">
+                    <p class="text-xl text-stone-800 font-medium leading-relaxed">Everything we thought we knew about
+                        scaling AI just died.</p>
+                </div>
+
+                <!-- Section: The Problem -->
+                <div>
+                    <h4 class="text-lg font-semibold text-stone-900 mb-3 flex items-center gap-2">
+                        <span class="bg-stone-900 text-white text-xs px-2 py-1">PROBLEM</span>
+                        The ResNet Bottleneck
+                    </h4>
+                    <p class="text-stone-600 leading-relaxed mb-4">
+                        For a decade, every major model (GPT, Gemini, Llama) relied on <strong
+                            class="text-stone-800">Residual Connections (ResNet)</strong>, the only way to build deep
+                        networks without mathematical chaos.
+                    </p>
+                    <div class="bg-stone-50 p-4 border border-stone-200">
+                        <p class="text-stone-600 text-sm">
+                            <strong class="text-stone-800">The Flaw:</strong> ResNet works like a single-lane highway.
+                            To make AI smarter, we made models "taller" (more layers). But making them "wider" caused
+                            signals to explode—3000x amplification crashing training.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Section: The Solution -->
+                <div>
+                    <h4 class="text-lg font-semibold text-stone-900 mb-3 flex items-center gap-2">
+                        <span class="bg-teal-700 text-white text-xs px-2 py-1">SOLUTION</span>
+                        The Traffic Cop: Sinkhorn-Knopp
+                    </h4>
+                    <p class="text-stone-600 leading-relaxed mb-4">
+                        DeepSeek resurrected a 1967 algorithm called <strong
+                            class="text-stone-800">Sinkhorn-Knopp</strong>. It acts as a "Traffic Cop" that forces all
+                        data lanes to stay balanced.
+                    </p>
+                    <ul class="space-y-2 text-stone-600">
+                        <li class="flex items-start gap-2"><i class="fas fa-check text-teal-600 mt-1"></i> Forces every
+                            row and column of connection matrices to sum to 1</li>
+                        <li class="flex items-start gap-2"><i class="fas fa-check text-teal-600 mt-1"></i> Works whether
+                            you have 4 lanes or 4,000 lanes</li>
+                        <li class="flex items-start gap-2"><i class="fas fa-check text-teal-600 mt-1"></i> Prevents
+                            signal explosion that broke previous attempts</li>
+                    </ul>
+                </div>
+
+                <!-- Section: The Results -->
+                <div>
+                    <h4 class="text-lg font-semibold text-stone-900 mb-3 flex items-center gap-2">
+                        <span class="bg-teal-600 text-white text-xs px-2 py-1">RESULTS</span>
+                        The Numbers
+                    </h4>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="bg-stone-100 p-4 text-center">
+                            <span class="block font-serif text-3xl font-semibold text-stone-900">4x</span>
+                            <span class="text-sm text-stone-500">Width Expansion</span>
+                        </div>
+                        <div class="bg-stone-100 p-4 text-center">
+                            <span class="block font-serif text-3xl font-semibold text-teal-700">6.7%</span>
+                            <span class="text-sm text-stone-500">Extra Training Cost</span>
+                        </div>
+                    </div>
+                    <p class="text-stone-600 leading-relaxed mt-4">
+                        <strong class="text-stone-800">Translation:</strong> 4x the thinking capacity for basically
+                        free. This is quite literally new physics for AGI.
+                    </p>
+                </div>
+
+                <!-- CTA -->
+                <div class="bg-stone-900 p-6 text-center">
+                    <p class="text-white font-medium mb-4">Want the full breakdown with all the technical details?</p>
+                    <a href="https://x.com/ICE257_/status/2009656972489159025" target="_blank" rel="noopener"
+                        class="inline-flex items-center gap-2 bg-white text-stone-900 px-6 py-3 font-medium hover:bg-stone-100 transition">
+                        <i class="fab fa-x-twitter"></i> Read the Article on X
+                    </a>
+                </div>
+
+                <!-- References -->
+                <div class="border-t border-stone-200 pt-6">
+                    <h5 class="text-sm font-medium text-stone-500 uppercase mb-3">References</h5>
+                    <ol class="text-xs text-stone-500 space-y-1 list-decimal list-inside">
+                        <li>DeepSeek AI. (2025). <em>Manifold Constrained Hyperconnections for Scalable
+                                Transformers</em>. arXiv:2512.24880.</li>
+                        <li>Sinkhorn, R., & Knopp, P. (1967). <em>Concerning nonnegative matrices and doubly stochastic
+                                matrices</em>. Pacific J. Math.</li>
+                        <li>He, K., et al. (2016). <em>Deep Residual Learning for Image Recognition</em>. CVPR.</li>
+                    </ol>
+                </div>
+            </article>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="py-10 text-center text-sm bg-theme-tertiary text-theme-muted border-theme-primary"
+        style="border-top-width: 1px; border-top-style: solid;">
+        <p>Interactive Report developed by ICE <a href="https://x.com/ICE257_/status/2009656972489159025"
+                target="_blank" rel="noopener">(@ice257_)</a> • 2026</p>
+    </footer>
+
+    <!-- Scripts -->
+    <script>
+        // --- 1. ResNet & Explosion Simulation (Canvas) ---
+
+        class ParticleSystem {
+            constructor(canvasId, type) {
+                this.canvas = document.getElementById(canvasId);
+                this.ctx = this.canvas.getContext('2d');
+                this.type = type; // 'bottleneck' or 'explosion'
+                this.particles = [];
+
+                // Resize handling
+                this.resize();
+                window.addEventListener('resize', () => this.resize());
+
+                this.init();
+                this.animate();
+            }
+
+            resize() {
+                const parent = this.canvas.parentElement;
+                this.canvas.width = parent.clientWidth;
+                this.canvas.height = parent.clientHeight;
+            }
+
+            init() {
+                // Spawn initial particles
+                for (let i = 0; i < 20; i++) {
+                    this.particles.push(this.createParticle());
+                }
+            }
+
+            createParticle(x, y) {
+                const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+                return {
+                    x: x || 0,
+                    y: y || Math.random() * this.canvas.height,
+                    vx: this.type === 'explosion' ? (Math.random() * 4 + 2) : (Math.random() * 2 + 1),
+                    vy: this.type === 'explosion' ? (Math.random() - 0.5) * 4 : (Math.random() - 0.5) * 0.5,
+                    size: Math.random() * 3 + 2,
+                    color: this.type === 'explosion'
+                        ? (isDark ? '#f87171' : '#dc2626')
+                        : (isDark ? '#2dd4bf' : '#0d9488'),
+                    life: 100
+                };
+            }
+
+            update() {
+                // Bottleneck Logic: Force particles to converge in center
+                if (this.type === 'bottleneck') {
+                    const centerY = this.canvas.height / 2;
+                    const bottleneckStart = this.canvas.width * 0.35;
+                    const bottleneckEnd = this.canvas.width * 0.65;
+
+                    this.particles.forEach(p => {
+                        p.x += p.vx;
+
+                        // Smooth attraction to center in bottleneck zone
+                        if (p.x > bottleneckStart && p.x < bottleneckEnd) {
+                            const pullStrength = 0.08;
+                            p.y += (centerY - p.y) * pullStrength;
+                            p.vx = Math.max(p.vx * 0.995, 0.8); // Slight slowdown
+                        } else {
+                            // Smooth recovery outside bottleneck
+                            p.vx = Math.min(p.vx + 0.02, 2.5);
+                        }
+
+                        // Wrap around smoothly
+                        if (p.x > this.canvas.width + 5) {
+                            p.x = -5;
+                            p.y = Math.random() * this.canvas.height;
+                            p.vx = Math.random() * 1.5 + 1;
+                        }
+                    });
+                }
+                // Explosion Logic: Multiply and scatter
+                else if (this.type === 'explosion') {
+                    if (this.particles.length < 150 && Math.random() > 0.9) {
+                        // Spontaneous multiplication
+                        const parent = this.particles[Math.floor(Math.random() * this.particles.length)];
+                        this.particles.push(this.createParticle(parent.x, parent.y));
+                    }
+
+                    this.particles.forEach((p, index) => {
+                        p.x += p.vx;
+                        p.y += p.vy;
+                        p.size += 0.05; // Grow (amplify)
+
+                        // Chaotic movement
+                        p.vy += (Math.random() - 0.5);
+
+                        if (p.x > this.canvas.width || p.y < 0 || p.y > this.canvas.height) {
+                            // Reset
+                            p.x = 0;
+                            p.y = Math.random() * this.canvas.height;
+                            p.size = Math.random() * 3 + 2;
+                            p.vx = Math.random() * 4 + 2;
+                            p.vy = (Math.random() - 0.5) * 4;
+
+                            // Limit max particles
+                            if (this.particles.length > 50) this.particles.splice(index, 1);
+                        }
+                    });
+                }
+            }
+
+            draw() {
+                const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+                this.ctx.fillStyle = isDark ? 'rgba(28, 25, 23, 0.3)' : 'rgba(250, 250, 248, 0.3)';
+                this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+
+                // Draw constraint lines for bottleneck
+                if (this.type === 'bottleneck') {
+                    this.ctx.strokeStyle = isDark ? '#44403C' : '#d6d3d1';
+                    this.ctx.lineWidth = 2;
+                    this.ctx.beginPath();
+                    this.ctx.moveTo(this.canvas.width * 0.3, 0);
+                    this.ctx.lineTo(this.canvas.width * 0.4, this.canvas.height * 0.45);
+                    this.ctx.lineTo(this.canvas.width * 0.6, this.canvas.height * 0.45);
+                    this.ctx.lineTo(this.canvas.width * 0.7, 0);
+
+                    this.ctx.moveTo(this.canvas.width * 0.3, this.canvas.height);
+                    this.ctx.lineTo(this.canvas.width * 0.4, this.canvas.height * 0.55);
+                    this.ctx.lineTo(this.canvas.width * 0.6, this.canvas.height * 0.55);
+                    this.ctx.lineTo(this.canvas.width * 0.7, this.canvas.height);
+                    this.ctx.stroke();
+                }
+
+                this.particles.forEach(p => {
+                    this.ctx.beginPath();
+                    this.ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                    this.ctx.fillStyle = p.color;
+                    this.ctx.fill();
+                });
+            }
+
+            animate() {
+                this.update();
+                this.draw();
+                requestAnimationFrame(() => this.animate());
+            }
+        }
+
+        // Initialize Canvases
+        new ParticleSystem('bottleneckCanvas', 'bottleneck');
+        new ParticleSystem('explosionCanvas', 'explosion');
+
+
+        // --- 2. Sinkhorn-Knopp Interactive Logic ---
+
+        let matrix = [
+            [0.5, 0.2, 0.3],
+            [0.1, 0.8, 0.1],
+            [0.4, 0.2, 0.4]
+        ];
+        let iteration = 0;
+        let convergenceHistory = [];
+        let sinkhornSimulation = null;
+        let isStabilized = false;
+
+        function getMaxDeviation() {
+            let colSums = [0, 0, 0];
+            matrix.forEach(row => row.forEach((val, cIdx) => colSums[cIdx] += val));
+            let maxDev = 0;
+            [...colSums, ...matrix.map(r => r.reduce((a, b) => a + b, 0))].forEach(s => {
+                const dev = Math.abs(s - 1);
+                if (dev > maxDev) maxDev = dev;
+            });
+            return maxDev;
+        }
+
+        function renderGrid() {
+            const grid = document.getElementById('sinkhorn-grid');
+            grid.innerHTML = '';
+
+            let colSums = [0, 0, 0];
+
+            matrix.forEach((row, rIdx) => {
+                row.forEach((val, cIdx) => {
+                    colSums[cIdx] += val;
+                    const cell = document.createElement('div');
+                    const isHigh = val > 0.9;
+
+                    cell.className = `matrix-cell h-14 flex items-center justify-center font-mono text-sm border border-stone-300 ${isHigh ? 'bg-red-100 text-red-800 font-bold' : 'bg-white text-stone-800'}`;
+                    cell.style.backgroundColor = `rgba(13, 148, 136, ${val * 0.3})`;
+                    cell.textContent = val.toFixed(2);
+                    grid.appendChild(cell);
+                });
+            });
+
+            // Update column sums
+            for (let i = 0; i < 3; i++) {
+                const el = document.getElementById(`col-sum-${i}`);
+                el.textContent = colSums[i].toFixed(2);
+                el.className = Math.abs(colSums[i] - 1) < 0.01 ? "text-center text-xs text-teal-700 font-bold" : "text-center text-xs text-red-600";
+            }
+
+            const maxDev = getMaxDeviation();
+            document.getElementById('max-dev').textContent = maxDev.toFixed(3);
+            document.getElementById('iter-count').textContent = iteration;
+
+            // Update convergence status
+            const statusEl = document.getElementById('convergence-status');
+            if (maxDev < 0.01) {
+                statusEl.textContent = '✓ Balanced';
+                statusEl.className = 'text-teal-700';
+                isStabilized = true;
+            } else if (maxDev < 0.1) {
+                statusEl.textContent = 'Converging...';
+                statusEl.className = 'text-amber-600';
+                isStabilized = false;
+            } else {
+                statusEl.textContent = 'Unstable';
+                statusEl.className = 'text-red-600';
+                isStabilized = false;
+            }
+        }
+
+        function randomizeMatrix() {
+            iteration = 0;
+            convergenceHistory = [];
+            matrix = matrix.map(row => row.map(() => Math.random() * 2 + 0.1));
+            isStabilized = false;
+
+            // Fully reset simulation - reinitialize particles in chaotic state
+            if (sinkhornSimulation) {
+                sinkhornSimulation.particles = [];
+                sinkhornSimulation.init();
+                sinkhornSimulation.setChaotic();
+            }
+            document.getElementById('sinkhorn-sim-status').textContent = 'Status: Chaotic';
+            document.getElementById('sinkhorn-sim-status').className = 'text-xs text-red-600';
+
+            // Track initial deviation
+            convergenceHistory.push(getMaxDeviation());
+            updateConvergenceChart();
+            renderGrid();
+        }
+
+        function runSinkhornStep() {
+            iteration++;
+
+            // Add small perturbation to keep things interesting if already converged
+            const currentDev = getMaxDeviation();
+            if (currentDev < 0.01) {
+                // Add noise while keeping rough balance
+                matrix = matrix.map(row => row.map(val => val + (Math.random() - 0.5) * 0.15));
+                // Ensure all positive
+                matrix = matrix.map(row => row.map(val => Math.max(val, 0.01)));
+            }
+
+            // 1. Normalize Rows
+            matrix = matrix.map(row => {
+                const sum = row.reduce((a, b) => a + b, 0);
+                return row.map(val => val / sum);
+            });
+
+            // 2. Normalize Columns
+            for (let c = 0; c < 3; c++) {
+                let colSum = 0;
+                for (let r = 0; r < 3; r++) colSum += matrix[r][c];
+                for (let r = 0; r < 3; r++) matrix[r][c] /= colSum;
+            }
+
+            // Track convergence
+            const newDev = getMaxDeviation();
+            convergenceHistory.push(newDev);
+            updateConvergenceChart();
+
+            // Update simulation
+            if (sinkhornSimulation) sinkhornSimulation.setStabilizing();
+            document.getElementById('sinkhorn-sim-status').textContent = 'Status: Stabilizing';
+            document.getElementById('sinkhorn-sim-status').className = 'text-xs text-emerald-400';
+
+            renderGrid();
+        }
+
+        renderGrid();
+
+
+        // --- 3. Sinkhorn Particle Simulation ---
+
+        class SinkhornParticleSystem {
+            constructor(canvasId) {
+                this.canvas = document.getElementById(canvasId);
+                this.ctx = this.canvas.getContext('2d');
+                this.particles = [];
+                this.mode = 'chaotic'; // 'chaotic' or 'stabilizing'
+                this.lanes = 3;
+
+                this.resize();
+                window.addEventListener('resize', () => this.resize());
+
+                this.init();
+                this.animate();
+            }
+
+            resize() {
+                const parent = this.canvas.parentElement;
+                this.canvas.width = parent.clientWidth;
+                this.canvas.height = parent.clientHeight;
+            }
+
+            init() {
+                for (let i = 0; i < 30; i++) {
+                    this.particles.push(this.createParticle());
+                }
+            }
+
+            createParticle() {
+                const laneHeight = this.canvas.height / this.lanes;
+                const lane = Math.floor(Math.random() * this.lanes);
+                return {
+                    x: Math.random() * this.canvas.width,
+                    y: Math.random() * this.canvas.height,
+                    targetY: laneHeight * lane + laneHeight / 2,
+                    lane: lane,
+                    vx: Math.random() * 3 + 1,
+                    vy: (Math.random() - 0.5) * 4,
+                    size: Math.random() * 3 + 2,
+                    hue: 0 // Start red/chaotic by default
+                };
+            }
+
+            setChaotic() {
+                this.mode = 'chaotic';
+                this.particles.forEach(p => {
+                    p.vy = (Math.random() - 0.5) * 8;
+                    p.hue = 0; // Red for light theme
+                });
+            }
+
+            setStabilizing() {
+                this.mode = 'stabilizing';
+                const laneHeight = this.canvas.height / this.lanes;
+                this.particles.forEach(p => {
+                    p.lane = Math.floor(Math.random() * this.lanes);
+                    p.targetY = laneHeight * p.lane + laneHeight / 2;
+                    p.hue = 170; // Teal for light theme
+                });
+            }
+
+            update() {
+                const laneHeight = this.canvas.height / this.lanes;
+
+                this.particles.forEach(p => {
+                    p.x += p.vx;
+
+                    if (this.mode === 'chaotic') {
+                        p.y += p.vy;
+                        p.vy += (Math.random() - 0.5) * 0.5;
+                        p.vy = Math.max(-5, Math.min(5, p.vy));
+
+                        // Bounce off edges
+                        if (p.y < 10 || p.y > this.canvas.height - 10) {
+                            p.vy *= -0.8;
+                        }
+                    } else {
+                        // Stabilizing - attract to lane
+                        const attractForce = (p.targetY - p.y) * 0.08;
+                        p.vy = p.vy * 0.9 + attractForce;
+                        p.y += p.vy;
+                    }
+
+                    // Wrap around
+                    if (p.x > this.canvas.width + 10) {
+                        p.x = -10;
+                        if (this.mode === 'stabilizing') {
+                            p.lane = Math.floor(Math.random() * this.lanes);
+                            p.targetY = laneHeight * p.lane + laneHeight / 2;
+                        }
+                    }
+                });
+            }
+
+            draw() {
+                const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+                this.ctx.fillStyle = isDark ? 'rgba(28, 25, 23, 0.2)' : 'rgba(250, 250, 248, 0.2)';
+                this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+
+                // Draw lanes when stabilizing
+                if (this.mode === 'stabilizing') {
+                    const laneHeight = this.canvas.height / this.lanes;
+                    this.ctx.strokeStyle = isDark ? 'rgba(45, 212, 191, 0.3)' : 'rgba(13, 148, 136, 0.3)';
+                    this.ctx.lineWidth = 1;
+                    for (let i = 1; i < this.lanes; i++) {
+                        this.ctx.beginPath();
+                        this.ctx.moveTo(0, laneHeight * i);
+                        this.ctx.lineTo(this.canvas.width, laneHeight * i);
+                        this.ctx.stroke();
+                    }
+                }
+
+                this.particles.forEach(p => {
+                    this.ctx.beginPath();
+                    this.ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                    this.ctx.fillStyle = `hsl(${p.hue}, 80%, 60%)`;
+                    this.ctx.fill();
+
+                    // Trail effect
+                    this.ctx.beginPath();
+                    this.ctx.moveTo(p.x, p.y);
+                    this.ctx.lineTo(p.x - p.vx * 3, p.y - p.vy * 2);
+                    this.ctx.strokeStyle = `hsla(${p.hue}, 80%, 60%, 0.4)`;
+                    this.ctx.lineWidth = p.size * 0.8;
+                    this.ctx.stroke();
+                });
+            }
+
+            animate() {
+                this.update();
+                this.draw();
+                requestAnimationFrame(() => this.animate());
+            }
+        }
+
+        sinkhornSimulation = new SinkhornParticleSystem('sinkhornSimCanvas');
+
+
+        // --- 4. Before/After Comparison Simulations ---
+
+        class ComparisonParticleSystem {
+            constructor(canvasId, type) {
+                this.canvas = document.getElementById(canvasId);
+                this.ctx = this.canvas.getContext('2d');
+                this.type = type; // 'unstable' or 'stable'
+                this.particles = [];
+                this.lanes = 4;
+
+                this.resize();
+                window.addEventListener('resize', () => this.resize());
+
+                this.init();
+                this.animate();
+            }
+
+            resize() {
+                const parent = this.canvas.parentElement;
+                this.canvas.width = parent.clientWidth;
+                this.canvas.height = parent.clientHeight;
+            }
+
+            init() {
+                const count = this.type === 'stable' ? 25 : 20;
+                for (let i = 0; i < count; i++) {
+                    this.particles.push(this.createParticle());
+                }
+            }
+
+            createParticle() {
+                const laneHeight = this.canvas.height / this.lanes;
+                const lane = Math.floor(Math.random() * this.lanes);
+                return {
+                    x: Math.random() * this.canvas.width,
+                    y: Math.random() * this.canvas.height,
+                    targetY: laneHeight * lane + laneHeight / 2,
+                    lane: lane,
+                    vx: Math.random() * 2 + 1,
+                    vy: (Math.random() - 0.5) * 4,
+                    size: Math.random() * 2.5 + 1.5,
+                    hue: this.type === 'stable' ? 160 : 350
+                };
+            }
+
+            update() {
+                const laneHeight = this.canvas.height / this.lanes;
+
+                this.particles.forEach(p => {
+                    p.x += p.vx;
+
+                    if (this.type === 'unstable') {
+                        // Chaotic behavior
+                        p.y += p.vy;
+                        p.vy += (Math.random() - 0.5) * 0.8;
+                        p.vy = Math.max(-6, Math.min(6, p.vy));
+                        p.size += (Math.random() - 0.3) * 0.1; // Grow erratically
+                        p.size = Math.max(1, Math.min(6, p.size));
+
+                        if (p.y < 5 || p.y > this.canvas.height - 5) {
+                            p.vy *= -0.7;
+                        }
+                    } else {
+                        // Stable behavior - stay in lanes
+                        const attractForce = (p.targetY - p.y) * 0.1;
+                        p.vy = p.vy * 0.85 + attractForce;
+                        p.y += p.vy;
+                    }
+
+                    if (p.x > this.canvas.width + 10) {
+                        p.x = -10;
+                        if (this.type === 'stable') {
+                            p.lane = Math.floor(Math.random() * this.lanes);
+                            p.targetY = laneHeight * p.lane + laneHeight / 2;
+                        }
+                        p.y = Math.random() * this.canvas.height;
+                    }
+                });
+            }
+
+            draw() {
+                this.ctx.fillStyle = 'rgba(15, 23, 42, 0.25)';
+                this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+
+                // Draw lanes for stable
+                if (this.type === 'stable') {
+                    const laneHeight = this.canvas.height / this.lanes;
+                    this.ctx.strokeStyle = 'rgba(52, 211, 153, 0.2)';
+                    this.ctx.lineWidth = 1;
+                    for (let i = 1; i < this.lanes; i++) {
+                        this.ctx.beginPath();
+                        this.ctx.moveTo(0, laneHeight * i);
+                        this.ctx.lineTo(this.canvas.width, laneHeight * i);
+                        this.ctx.stroke();
+                    }
+                }
+
+                this.particles.forEach(p => {
+                    this.ctx.beginPath();
+                    this.ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                    this.ctx.fillStyle = `hsl(${p.hue}, 80%, 60%)`;
+                    this.ctx.fill();
+
+                    // Trail
+                    this.ctx.beginPath();
+                    this.ctx.moveTo(p.x, p.y);
+                    this.ctx.lineTo(p.x - p.vx * 2.5, p.y - p.vy * 1.5);
+                    this.ctx.strokeStyle = `hsla(${p.hue}, 80%, 60%, 0.3)`;
+                    this.ctx.lineWidth = p.size * 0.6;
+                    this.ctx.stroke();
+                });
+            }
+
+            animate() {
+                this.update();
+                this.draw();
+                requestAnimationFrame(() => this.animate());
+            }
+        }
+
+        // Initialize Canvases (Comparison system removed as section was replaced)
+        // new ComparisonParticleSystem('beforeCanvas', 'unstable');
+        // new ComparisonParticleSystem('afterCanvas', 'stable');
+
+        // Remove chart-related functions (no longer needed)
+        function updateConvergenceChart() { }
+        function resetConvergenceChart() { }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            // Navigation Scroll
+            const readModeBtn = document.getElementById('read-mode-btn');
+            if (readModeBtn) {
+                readModeBtn.addEventListener('click', () => {
+                    const articleText = document.getElementById('article-text');
+                    if (articleText) articleText.scrollIntoView({ behavior: 'smooth' });
+                });
+            }
+
+            // --- Theme Toggle ---
+            const toggle = document.getElementById('theme-toggle');
+            const icon = document.getElementById('theme-icon');
+            const html = document.documentElement;
+
+            if (!toggle || !icon) return;
+
+            // Check for saved preference or system preference
+            function getPreferredTheme() {
+                const saved = localStorage.getItem('theme');
+                if (saved) return saved;
+                return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+            }
+
+            function setTheme(theme) {
+                if (theme === 'dark') {
+                    html.setAttribute('data-theme', 'dark');
+                    icon.classList.remove('fa-moon');
+                    icon.classList.add('fa-sun');
+                } else {
+                    html.removeAttribute('data-theme');
+                    icon.classList.remove('fa-sun');
+                    icon.classList.add('fa-moon');
+                }
+                localStorage.setItem('theme', theme);
+                updateCanvasTheme(theme);
+            }
+
+            function updateCanvasTheme(theme) {
+                // Force redraw of all particle systems if needed
+                // Note: Particle systems draw() method checks theme on every frame
+            }
+
+            // Initialize theme
+            setTheme(getPreferredTheme());
+
+            // Toggle on click
+            toggle.addEventListener('click', () => {
+                const current = html.getAttribute('data-theme');
+                setTheme(current === 'dark' ? 'light' : 'dark');
+            });
+
+            // Listen for system preference changes
+            window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+                if (!localStorage.getItem('theme')) {
+                    setTheme(e.matches ? 'dark' : 'light');
+                }
+            });
+        });
+
+    </script>
+</body>
+
+</html>
